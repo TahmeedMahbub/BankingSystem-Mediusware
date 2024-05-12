@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\DB;
 class TransactionController extends Controller
 {
     public function index () {
-        return view('transaction.home');
+        $transactions = Transaction::where('user_id', Auth::user()->id)->get();
+        return view('transaction.home', compact('transactions'));
     }
 
     public function showDeposits () {
@@ -53,6 +54,9 @@ class TransactionController extends Controller
     }
 
     public function storeWithdraw (Request $request) {
+        if($request->amount > Auth::user()->balance) {
+            return redirect()->route('withdraw')->with('danger', 'Withdrawn amount cannot be better than your balance!');
+        }
         $withdraw = new Transaction();
         $withdraw->user_id = Auth::user()->id;
         $withdraw->transaction_type = "withdraw";
@@ -78,6 +82,10 @@ class TransactionController extends Controller
 
         $rate = (Auth::user()->account_type == 'individual' ? 0.015 : 0.025) / 100;
 
+        if(Auth::user()->account_type == 'business' && Transaction::where('user_id', Auth::user()->id)->where('transaction_type', 'withdraw')->sum('amount') > 50000) {
+            $rate = 0.015 / 100;
+        }
+
         $startDate = Carbon::now()->startOfMonth();
         $endDate = Carbon::now()->endOfMonth();
         $monthly_withdraw = Transaction::where('user_id', Auth::user()->id)
@@ -91,13 +99,41 @@ class TransactionController extends Controller
             } else {
                 $fee = ($amount - 1000) * $rate;
             }
-        } else if($monthly_withdraw <= 5000 && $monthly_withdraw + $amount > 5000) {
-            $fee = ($monthly_withdraw + $amount - 5000) * $rate;
-        } else {
+        }
+        else if($monthly_withdraw <= 5000 && $monthly_withdraw + $amount > 5000) {
+            $limit = 5000 - $monthly_withdraw;
+            if($limit < 1000) {
+                if($amount <= $limit)
+                {
+                    return 0;
+                }
+                else
+                {
+                    $fee = ($amount - $limit) * $rate;
+                }
+            }
+            else if($limit > 1000)
+            {
+                if($amount <= 1000)
+                {
+                    return 0;
+                }
+                else
+                {
+                    $fee = ($amount - 1000) * $rate;
+                }
+            }
+            else
+            {
+                $fee = ($amount - 1000) * $rate;
+            }
+        }
+        else
+        {
             $fee = $amount * $rate;
         }
 
-        return $fee;
+        return number_format($fee, 2);
     }
 
 }

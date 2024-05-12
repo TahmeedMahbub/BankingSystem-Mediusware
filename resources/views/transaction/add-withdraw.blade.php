@@ -22,8 +22,9 @@
 
                         <div class="form-group">
                             <label for="amount">Withdrawn Amount</label>
-                            <input type="number" class="form-control" id="amount" name="amount" min="0" step="0.01" value="{{ old('amount') }}" required>
+                            <input type="number" class="form-control" id="amount" name="amount" min="0" max="{{ Auth::user()->balance }}" step="0.01" value="{{ old('amount') }}" required>
                         </div>
+                        <div id="fee" class="mb-3 mt-1"><b>Fee: </b>0 Taka</div>
 
                         @if ($errors->any())
                             <div class="alert alert-danger">
@@ -44,5 +45,39 @@
         </div>
     </div>
 </div>
+
+
+@endsection
+
+@section('footer')
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#amount').on('input', function() {
+                var amountValue = $(this).val() == null ? 0 : $(this).val();
+
+                if ($(this).val()) {
+                    var amountValue = $(this).val();
+                }
+                else {
+                    var amountValue = 0;
+                }
+
+                $.ajax({
+                    url: '/withdraw/fee/' + amountValue,
+                    type: 'GET',
+                    success: function(fee) {
+                        var fee = `<b>Fee: </b>${fee} Taka`;
+                        $("#fee").html(fee);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
 
 @endsection

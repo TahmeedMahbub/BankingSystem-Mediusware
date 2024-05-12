@@ -20,15 +20,21 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($withdraws as $withdraw)
-        <tr>
-            <th scope="row">{{ $loop->iteration }}</th>
-            <td class="text-right">{{ $withdraw->amount }}</td>
-            <td class="text-right">{{ $withdraw->fee }}</td>
-            <td class="text-right">{{ number_format(($withdraw->amount + $withdraw->fee), 2) }}</td>
-            <td class="text-right">{{ date('d-M-Y', strtotime($withdraw->date)) }}</td>
-        </tr>
-        @endforeach
+        @if(count($withdraws) > 0)
+            @foreach($withdraws as $withdraw)
+                <tr>
+                    <th scope="row">{{ $loop->iteration }}</th>
+                    <td class="text-right">{{ $withdraw->amount }}</td>
+                    <td class="text-right">{{ $withdraw->fee }}</td>
+                    <td class="text-right">{{ number_format(($withdraw->amount + $withdraw->fee), 2) }}</td>
+                    <td class="text-right">{{ date('d-M-Y', strtotime($withdraw->date)) }}</td>
+                </tr>
+            @endforeach
+        @else
+            <tr>
+                <td colspan="6" class="text-center">No Data Found!</td>
+            </tr>
+        @endif
     </tbody>
 </table>
 @endsection

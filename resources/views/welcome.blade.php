@@ -45,14 +45,25 @@
                 </button>
             </div>
         @endif
+        @if(session('danger'))
+            <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+                {{ session('danger') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
 
         <div class="p-3">
             @yield('main')
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <div class="p-3">
+            @yield('footer')
+        </div>
     </body>
 </html>

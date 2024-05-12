@@ -19,14 +19,20 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($deposits as $deposit)
-        <tr>
-            <th scope="row">{{ $loop->iteration }}</th>
-            <td>{{ $deposit->amount }}</td>
-            <td>{{ $deposit->fee }}</td>
-            <td>{{ date('d-M-Y', strtotime($deposit->date)) }}</td>
-        </tr>
-        @endforeach
+        @if(count($deposits) > 0)
+            @foreach($deposits as $deposit)
+            <tr>
+                <th scope="row">{{ $loop->iteration }}</th>
+                <td>{{ $deposit->amount }}</td>
+                <td>{{ $deposit->fee }}</td>
+                <td>{{ date('d-M-Y', strtotime($deposit->date)) }}</td>
+            </tr>
+            @endforeach
+        @else
+            <tr>
+                <td colspan="6" class="text-center">No Data Found!</td>
+            </tr>
+        @endif
     </tbody>
 </table>
 @endsection

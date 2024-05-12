@@ -23,12 +23,10 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // If validation fails, return the validation errors
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Create the user
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -36,10 +34,9 @@ class AuthController extends Controller
             'password' => Hash::make($request->input('password')),
         ]);
 
-        // Log in the user
         auth()->login($user);
 
-        return view('transaction.home');
+        return redirect()->route('home');
     }
 
     public function login() {
