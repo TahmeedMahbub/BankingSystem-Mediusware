@@ -40,5 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/withdraw/create', [TransactionController::class, 'createWithdraw'])->name('withdraw.create');
     Route::post('/withdraw/store', [TransactionController::class, 'storeWithdraw'])->name('withdraw.store');
 
+    Route::get('/withdraw/fee/{amount}', [TransactionController::class, 'withdrawnFee'])->name('withdraw.fee');
+
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });

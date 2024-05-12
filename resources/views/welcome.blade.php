@@ -17,23 +17,34 @@
         <style></style>
     </head>
     <body class="antialiased">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#"><img src="{{ asset('assets/images/logo/logo.png') }}" alt="" srcset="" style="height: 50px;"></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-item nav-link active" href="{{ route('home') }}">Home</a>
-                    <a class="nav-item nav-link" href="{{ route('deposit') }}">Deposit</a>
-                    <a class="nav-item nav-link" href="{{ route('withdraw') }}">Withdraw</a>
-                </div>
-                <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="{{ route('logout') }}">Logout</a>
+        @if(Auth::user())
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="#"><img src="{{ asset('assets/images/logo/logo.png') }}" alt="" srcset="" style="height: 50px;"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link active" href="{{ route('home') }}">Home</a>
+                        <a class="nav-item nav-link" href="{{ route('deposit') }}">Deposit</a>
+                        <a class="nav-item nav-link" href="{{ route('withdraw') }}">Withdraw</a>
+                    </div>
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="{{ route('logout') }}">Logout</a>
 
+                    </div>
                 </div>
+            </nav>
+        @endif
+
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+                {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-        </nav>
+        @endif
 
         <div class="p-3">
             @yield('main')
